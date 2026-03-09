@@ -2,25 +2,27 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import os
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+import tensorflow as tf
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout
+
+st.set_page_config(page_title="DeepFake Detector", page_icon="🔍", layout="centered")
+st.title("🔍 DeepFake Image Detector")
+st.markdown("Upload an image to check if it's **AI-generated (Fake)** or **Real**.")
+st.divider()
 
 @st.cache_resource
 def load_model():
-    import tensorflow as tf
-    from tensorflow.keras.applications import MobileNetV2
-    from tensorflow.keras.models import Sequential
-    from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout
-    import gdown
-    
-    model_path = "deepfake_model_v2.keras"
+    model_path = "deepfake_model.h5"
     if not os.path.exists(model_path):
-        with st.spinner("Downloading model..."):
-            gdown.download(
-                "https://drive.google.com/uc?id=1tBXROdaMxrk2RbAkfvcaVz1NCI1KA6ao",
-                model_path, quiet=False
-            )
-    
+        import gdown
+        gdown.download(
+            "https://drive.google.com/uc?id=1yrivvkZ4IOkv-dM2tNwi5Zv1naFKppHE",
+            model_path, quiet=False
+        )
     base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(128, 128, 3))
     base_model.trainable = False
     model = Sequential([
