@@ -1,3 +1,4 @@
-streamlit==1.55.0
+streamlit
 numpy
 pillow
+tensorflow-cpu
