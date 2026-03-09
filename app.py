@@ -11,6 +11,16 @@ def load_model():
     from tensorflow.keras.applications import MobileNetV2
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout
+    import gdown
+    
+    model_path = "deepfake_model_v2.keras"
+    if not os.path.exists(model_path):
+        with st.spinner("Downloading model..."):
+            gdown.download(
+                "https://drive.google.com/uc?id=1tBXROdaMxrk2RbAkfvcaVz1NCI1KA6ao",
+                model_path, quiet=False
+            )
+    
     base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(128, 128, 3))
     base_model.trainable = False
     model = Sequential([
@@ -22,7 +32,7 @@ def load_model():
         Dense(1, activation='sigmoid')
     ])
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    model.load_weights("deepfake_model.h5", by_name=False)
+    model.load_weights(model_path)
     return model
 
 with st.spinner("Loading model..."):
